@@ -9,7 +9,7 @@ ORIGIN_ALEX_SUPERMOVE2_IMPL           set $001F64A0
 ORIGIN_BLAZE_SUPERMOVE2               set $0000B15C
 BLAZE_SUPERMOVE2_END                  set $001F8000
 
-ORIGIN_SET_AIR_SPEED                  set $001F69A4
+ORIGIN_SET_X_SPEED_FOR_AIR_HIT        set $001F69A4
 ORIGIN_SET_Y_AIR_HIGH                 set $001F7472
 NEW_SET_Y_AIR_HIGH                    set $001F7580
 ORIGIN_SET_Y_AIR_MATCH_OFFSPECIAL     set $001F7488
@@ -44,18 +44,19 @@ LOCAL_BLAZE_VINSIBILITY
         bsr     ORIGIN_CHECK_ENEMY_COLLISION
         rts
 
-        org     ORIGIN_SET_AIR_SPEED
+        org     ORIGIN_SET_X_SPEED_FOR_AIR_HIT
         ;cmpi.w  #$1D,d0
         ;beq.s   SET_AIR_SPEED_SLOW
         ;cmpi.w  #$1E,d0
         ;beq.s   SET_AIR_SPEED_SLOW
-        cmpi.w  #$25,d0
-        beq.s   SET_AIR_SPEED_SLOW
         cmpi.w  #$1F,d0
         bne.s   LOCAL_NEXT
         cmpi.w  #4,$C(A3)
         beq.s   SET_AIR_SPEED_SLOW
+        bra.s   SET_AIR_SPEED_NORMAL
 LOCAL_NEXT
+        cmpi.w  #$25,d0
+        beq.s   SET_AIR_SPEED_SLOW
         cmpi.w  #$20,d0
         beq.s   SET_AIR_SPEED_SLOW
         cmpi.w  #$22,d0
@@ -87,62 +88,85 @@ SET_AIR_SPEED_NORMAL
 
         ; Check whether the enemy is in air or on the ground. Value 0 means on the ground.
         cmpi.w  #0,$5E(A2)
-        beq.s   NEW_SET_Y_AIR_CHECK_OFFSPECIAL
+        beq     NEW_SET_Y_AIR_CHECK_OFFSPECIAL
 
         ; Check whether the Animation is air Combo
         cmpi.w  #$1D,D0
-        beq.s   NEW_SET_Y_AIR_MATCH_COMBO
+        beq     NEW_SET_Y_AIR_MATCH_NORMAL_PUNCH
         cmpi.w  #$1E,D0
-        beq.s   NEW_SET_Y_AIR_MATCH_COMBO
+        beq     NEW_SET_Y_AIR_MATCH_COMBO_DEFAULT
         cmpi.w  #$1F,D0
         bne.s   NEW_SET_Y_AIR_CHECK_FF_A
         ; Check the FrameId at $18 character variable. From the begin to the end the FrameId is decreasing
-        cmpi.w  #3,$18(A3)
-        bgt.s   NEW_SET_Y_AIR_MATCH_COMBO
+        cmpi.w  #2,$18(A3)
+        bgt     NEW_SET_Y_AIR_MATCH_COMBO_DEFAULT
+        cmpi.w  #4,$C(A3)
+        beq.s   NEW_SET_Y_AIR_NORMAL_RETURN
+        bclr    #7,$49(A2)
+        bra.s   NEW_SET_Y_AIR_NORMAL_RETURN
 
         ; Check whether the Animation is air F-Foward A
 NEW_SET_Y_AIR_CHECK_FF_A
         cmpi.w  #$31,D0
-        bne.s   NEW_SET_Y_AIR_CHECK_OFFSPECIAL
+        bne.s   NEW_SET_Y_AIR_CHECK_GRANDUPPER
         cmpi.w  #4,$C(A3)
-        bne.s   NEW_SET_Y_AIR_CHECK_FFA_ALEX
+        bne.s   NEW_SET_Y_AIR_CHECK_FF_A_ALEX
         cmpi.w  #$E,$18(A3)
-        bgt.s   NEW_SET_Y_AIR_MATCH_COMBO
-        bra.s   NEW_SET_Y_AIR_CHECK_OFFSPECIAL
-NEW_SET_Y_AIR_CHECK_FFA_ALEX
+        bgt     NEW_SET_Y_AIR_MATCH_FF_A
+        bra.s   NEW_SET_Y_AIR_NORMAL_RETURN
+NEW_SET_Y_AIR_CHECK_FF_A_ALEX
         cmpi.w  #2,$C(A3)
-        bne.s   NEW_SET_Y_AIR_CHECK_OFFSPECIAL
+        bne.s   NEW_SET_Y_AIR_NORMAL_RETURN
         cmpi.w  #6,$18(A3)
-        bgt.s   NEW_SET_Y_AIR_MATCH_COMBO
+        bgt.s   NEW_SET_Y_AIR_MATCH_FF_A
+        move.l  #$FFFAC400,$2E(A2)
+        cmpi.w  #4,$18(A3)
+        bgt.s   NEW_SET_Y_AIR_MATCH_FF_A_RETURN
+        bclr    #7,$49(A2)
+NEW_SET_Y_AIR_MATCH_FF_A_RETURN
+        rts
+
+        ; Check whether the Animation is Alex's Grandupper
+NEW_SET_Y_AIR_CHECK_GRANDUPPER
+        cmpi.w  #$24,D0
+        bne.s   NEW_SET_Y_AIR_CHECK_OFFSPECIAL
+        cmpi.w  #2,$C(A3)
+        bne.s   NEW_SET_Y_AIR_NORMAL_RETURN
+        cmpi.w  #2,$18(A3)
+        bgt.s   NEW_SET_Y_AIR_NORMAL_RETURN
+        bclr    #7,$49(A2)
+        bra.s   NEW_SET_Y_AIR_NORMAL_RETURN
 
         ; Check whether the Animation is off special no matter air or on the ground
 NEW_SET_Y_AIR_CHECK_OFFSPECIAL
         cmpi.w  #$25,D0
         beq.s   NEW_SET_Y_AIR_MATCH_OFFSPECIAL
+NEW_SET_Y_AIR_NORMAL_RETURN
         move.l  #$FFFAC400,$2E(A2)
         rts
 
 NEW_SET_Y_AIR_MATCH_OFFSPECIAL
         jmp     ORIGIN_SET_Y_AIR_MATCH_OFFSPECIAL
 
-NEW_SET_Y_AIR_MATCH_COMBO
-        cmpi.l  #$FFF60000,$5E(A2)
-        bge.s   NEW_SET_Y_AIR_COMBO_CATCH_UP
-        cmpi.w  #$1D,D0
-        bne.s   NEW_SET_Y_AIR_MATCH_COMBO_DEFAULT
+NEW_SET_Y_AIR_MATCH_NORMAL_PUNCH
         ; Set the Y air inertia. As negative value, the bigger of the value, the lower of the Y position.
-        move.l  #$FFFF3500,$2E(A2)
+        move.l  #$FFFF3600,$2E(A2)
         bra.s   NEW_SET_Y_AIR_COMBO_RETURN
+        ;cmpi.l  #$FFF60000,$5E(A2)
+        ;bge.s   NEW_SET_Y_AIR_COMBO_CATCH_UP
+        ;move.l  #$FFFF3500,$2E(A2)
+        ;bra.s   NEW_SET_Y_AIR_COMBO_RETURN
+;NEW_SET_Y_AIR_COMBO_CATCH_UP
+        ;move.l  #$FFFE8000,$2E(A2)
+        ;bra.s   NEW_SET_Y_AIR_COMBO_RETURN
+
 NEW_SET_Y_AIR_MATCH_COMBO_DEFAULT
         move.l  #$FFFE8000,$2E(A2)
-        bra.s   NEW_SET_Y_AIR_COMBO_RETURN
-NEW_SET_Y_AIR_COMBO_CATCH_UP
-        move.l  #$FFFE8000,$2E(A2)
 NEW_SET_Y_AIR_COMBO_RETURN
-        cmpi.w  #$31,D0
-        beq.s   NEW_SET_Y_AIR_COMBO_X
         move.w  #0,$92(A2)
         rts
-NEW_SET_Y_AIR_COMBO_X
+
+NEW_SET_Y_AIR_MATCH_FF_A
+        move.l  #$FFFE8000,$2E(A2)
         move.w  #1,$92(A2)
         rts
