@@ -21,7 +21,11 @@ ORIGIN_LOC_4D42                       set $00004D42
 ORIGIN_LOC_4D5C                       set $00004D5C
 ORIGIN_LOC_4E8E                       set $00004E8E
 
+ORIGIN_LOC_5502                       set $00005502
+ORIGIN_DISPOSE_WEAPON                 set $00011BA2
+
 ORIGIN_SUB_24E00                      set $00024E00
+ORIGIN_DISPLAY_KO_KILL                set $000078E6
 ORIGIN_PLAY_SOUND                     set $00040008
 
 OFFSPECIAL_CONSUME_SP                 set $001F5C4A
@@ -39,6 +43,8 @@ BYTE_7957                             set $00007957
 
 ORIGIN_DISPLAY_KO_ENEMY_KILL_C1       set $00007913
 ORIGIN_DISPLAY_KO_ENEMY_KILL_C2       set $0000794F
+
+ORIGIN_GRANDUPPER_FRAME_ANIMATION     set $001F6B92
 
 ; Overrides: ---------------------------------------------------------------
         org     SUB_4CBE
@@ -110,6 +116,9 @@ SET_AIR_SPEED_NORMAL:
 
         org     ORIGIN_LOC_4D2C
         jmp     NEW_CHECK_ALEX_AIR_PUNCH_SKIP
+
+        ;org     ORIGIN_LOC_5502
+        ;jmp     NEW_CHECK_HIT_ENEMY_DEATH
 
         org     ORIGIN_SUB_24E00
         jsr     (ORIGIN_PLAY_SOUND).l
@@ -254,6 +263,32 @@ ORIGIN_DRINK_CUP_DISPLAY_SP:
         nop
 ORIGIN_DRINK_TEAPOT_DISPLAY_SP:
 
+        org     ORIGIN_GRANDUPPER_FRAME_ANIMATION
+        cmpi.w  #2,$18(a2)
+        ble.s   loc_1F6BA4
+        cmpi.w  #9,$18(a2)
+        ble.s   loc_1F6BAC
+        rts
+
+loc_1F6BA4:                             ; CODE XREF: ROM:001F6B98↑j
+        bset    #7,$49(a2)
+        rts
+
+loc_1F6BAC:                             ; CODE XREF: ROM:001F6BA0↑j
+        move.b  $4B(a2),d6
+        btst    #3,d6
+        beq.s   loc_1F6BC0
+        addi.l  #$1C000,$40(a2)
+        rts
+
+loc_1F6BC0:                             ; CODE XREF: ROM:001F6BB4↑j
+        btst    #2,d6
+        beq.s   locret_1F6BCE
+        subi.l  #$1C000,$40(a2)
+
+locret_1F6BCE:                          ; CODE XREF: ROM:001F6BC4↑j
+        rts
+
 ; Change: ---------------------------------------------------------------
         org     BLAZE_SUPERMOVE2_END
         bset    #7,$49(A2)
@@ -315,7 +350,7 @@ NEW_SET_Y_AIR_CHECK_GRANDUPPER:
         bne.s   NEW_SET_Y_AIR_CHECK_OFFSPECIAL
         cmpi.w  #2,$C(A3)
         bne.s   NEW_SET_Y_AIR_NORMAL_RETURN
-        cmpi.w  #2,$18(A3)
+        cmpi.w  #3,$18(A3)
         bgt.s   NEW_SET_Y_AIR_NORMAL_RETURN
         bclr    #7,$49(A2)
         bra.s   NEW_SET_Y_AIR_NORMAL_RETURN
@@ -333,15 +368,15 @@ NEW_SET_Y_AIR_MATCH_OFFSPECIAL:
 
 NEW_SET_Y_AIR_MATCH_NORMAL_PUNCH:
         ; Set the Y air inertia. As negative value, the bigger of the value, the lower of the Y position.
-        ;move.l  #$FFFF3600,$2E(A2)
+        move.l  #$FFFF3600,$2E(A2)
+        bra.s   NEW_SET_Y_AIR_COMBO_RETURN
+        ;cmpi.l  #$FFF60000,$5E(A2)
+        ;bge.s   NEW_SET_Y_AIR_COMBO_CATCH_UP
+        ;move.l  #$FFFF3500,$2E(A2)
         ;bra.s   NEW_SET_Y_AIR_COMBO_RETURN
-        cmpi.l  #$FFF60000,$5E(A2)
-        bge.s   NEW_SET_Y_AIR_COMBO_CATCH_UP
-        move.l  #$FFFF3500,$2E(A2)
-        bra.s   NEW_SET_Y_AIR_COMBO_RETURN
-NEW_SET_Y_AIR_COMBO_CATCH_UP:
-        move.l  #$FFFE8000,$2E(A2)
-        bra.s   NEW_SET_Y_AIR_COMBO_RETURN
+;NEW_SET_Y_AIR_COMBO_CATCH_UP:
+        ;move.l  #$FFFE8000,$2E(A2)
+        ;bra.s   NEW_SET_Y_AIR_COMBO_RETURN
 
 NEW_SET_Y_AIR_MATCH_COMBO_DEFAULT:
         move.l  #$FFFE8000,$2E(A2)
@@ -389,6 +424,31 @@ NEW_CHECK_ALEX_AIR_PUNCH_RETURN:
         jmp     ORIGIN_LOC_4D42
 NEW_CHECK_ALEX_AIR_PUNCH_SKIP_SKATE:
         jmp     ORIGIN_LOC_4D5C
+
+NEW_CHECK_HIT_ENEMY_DEATH:
+        btst    #6,$49(A2)
+        beq.s   NEW_CHECK_HIT_NORMAL_HIT
+        sf      $49(A2)
+        move.w  #3,$92(A2)
+        move.l  #$FFFAC400,$2E(A2)
+        ori.w   #$14,D1
+        move.w  D1,$E(A1)
+        move.w  #6,0(A2)
+        jsr     ORIGIN_DISPOSE_WEAPON
+        addq.w  #4,SP
+        rts
+NEW_CHECK_HIT_NORMAL_HIT:
+        sf      $49(A2)
+        bset    #7,$49(A2)
+        move.w  #0,$92(A2)
+        move.l  #$FFFAC400,$2E(A2)
+        ori.w   #$14,D1
+        clr     $80(A2)
+        move.w  D1,$E(A1)
+        move.w  #6,0(A2)
+        jsr     ORIGIN_DISPOSE_WEAPON
+        addq.w  #4,SP
+        rts
 
         org NEW_DISPLAY_KO_SP
         clr.l   ($FFFFFC94).w
