@@ -1,4 +1,6 @@
-SUB_4CBE                              set $00004CBE
+ORIGIN_Chk_EnemyCollision             set $00004CBE
+
+ORIGIN_Chk_Hit                        set $0000541A
 
 ORIGIN_GRAB_ENEMY                     set $00005598
 LOCAL_55A2                            set $000055A2
@@ -8,6 +10,10 @@ ORIGIN_ALEX_SUPERMOVE2_IMPL           set $001F64A0
 
 ORIGIN_BLAZE_SUPERMOVE2               set $0000B15C
 BLAZE_SUPERMOVE2_END                  set $001F8000
+
+ORIGIN_HEADBUTT                       set $0000C58E
+ORIGIN_HEADBUTT_ENMY_DEATH            set $0000C59C
+NEW_HEADBUTT                          set $001F8080
 
 ORIGIN_INIT_ENMY_CLR_ENMY_SPCFC       set $0000E1E6
 NEW_INIT_ENMY_CLR_ENMY_SPCFC          set $001F8060
@@ -61,8 +67,12 @@ ORIGIN_ENMY_KNOCKOUT_LY_ON_FLOOR      set $0000E9C2
 NEW_ENMY_KNOCKOUT_CALC_Y_INERTIA      set $001F66E0
 
 ; Overrides: ---------------------------------------------------------------
-        org     SUB_4CBE
+        org     ORIGIN_Chk_EnemyCollision
 ORIGIN_CHECK_ENEMY_COLLISION:
+
+; --------------------------------------------------------------
+        org     ORIGIN_Chk_Hit
+ORIGIN_CHECK_HIT:
 
 ; --------------------------------------------------------------
         org     ORIGIN_Chk_EnemyCollision_MAX
@@ -107,6 +117,10 @@ LOCAL_BLAZE_VINSIBILITY:
         bclr    #7,$49(A2)
         bsr     ORIGIN_CHECK_ENEMY_COLLISION
         rts
+
+; --------------------------------------------------------------
+        org     ORIGIN_HEADBUTT
+        jmp     NEW_HEADBUTT
 
 ; --------------------------------------------------------------
         org     ORIGIN_INIT_ENMY_CLR_ENMY_SPCFC
@@ -416,7 +430,7 @@ NEW_ENMY_KNOWOUT_ON_GROUND:
 
         ; Check whether the enemy is in air or on the ground. Value 0 means on the ground.
         cmpi.w  #0,$5E(A2)
-        beq     NEW_SET_Y_AIR_CHECK_OFFSPECIAL
+        beq     NEW_SET_Y_AIR_CHECK_GRANDUPPER
 
         ; Check whether the Animation is air normal punch
         cmpi.w  #$1D,D0
@@ -496,7 +510,7 @@ NEW_SET_Y_AIR_CHECK_GRANDUPPER:
         bne.s   NEW_SET_Y_AIR_CHECK_OFFSPECIAL
         cmpi.w  #2,$C(A3)
         bne.s   NEW_SET_Y_AIR_NORMAL_RETURN
-        move.l  #$FFFB5000,$2E(A2)
+        move.l  #$FFFBD000,$2E(A2)
         cmpi.w  #4,$18(A3)
         bgt.s   NEW_SET_Y_AIR_MATCH_GRANDUPPER_RETURN
         move.w  #3,$92(A2)
@@ -657,3 +671,20 @@ loc_794A:                ; CODE XREF: Display_KO_Enemy_Kill+46j
         clr.w   $D2(a0)
         clr.w   $D4(a0)
         jmp     ORIGIN_INIT_ENMY_CLR_ENMY_D6
+
+; --------------------------------------------------------------
+        org     NEW_HEADBUTT
+        jsr     ORIGIN_CHK_HIT
+        btst    #0,$1E(A2)   
+        bne.s   LOCAL_CHK_ENMY_DEATH
+        jsr     ORIGIN_CHECK_ENEMY_COLLISION
+        movea.l $86(A2),A3
+        cmpi.w  #6,$0(A3)
+        bne.s   LOCAL_HEADBUTT_RETURN
+        btst    #5,$49(A2)
+        beq.s   LOCAL_HEADBUTT_RETURN
+        bclr    #5,$49(A2)
+LOCAL_HEADBUTT_RETURN:
+        rts
+LOCAL_CHK_ENMY_DEATH:
+        jmp     ORIGIN_HEADBUTT_ENMY_DEATH
