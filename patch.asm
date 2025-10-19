@@ -510,13 +510,15 @@ NEW_SET_Y_AIR_CHECK_GRANDUPPER:
         bne.s   NEW_SET_Y_AIR_CHECK_OFFSPECIAL
         cmpi.w  #2,$C(A3)
         bne.s   NEW_SET_Y_AIR_NORMAL_RETURN
-        move.l  #$FFFBD000,$2E(A2)
+        ;move.l  #$FFFBD000,$2E(A2)
+        move.l  #$FFFACC00,$2E(A2)
+        move.w  #2,$92(A2)
         cmpi.w  #4,$18(A3)
         bgt.s   NEW_SET_Y_AIR_MATCH_GRANDUPPER_RETURN
+        move.l  #$FFFAC400,$2E(A2)
         move.w  #3,$92(A2)
         ; Set enemy === marking grand upper Y inertia ===
         move.b  #1,$4F(A2)
-        move.l  #$FFFAC400,$2E(A2)
         bclr    #7,$49(A2)
 NEW_SET_Y_AIR_MATCH_GRANDUPPER_RETURN:
         rts
