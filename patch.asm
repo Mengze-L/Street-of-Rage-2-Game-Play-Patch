@@ -231,25 +231,25 @@ loc_1F6BAC:                             ; CODE XREF: ROM:001F6BA0↑j
         move.b  $4B(A2),D6
         btst    #3,D6
         beq.s   loc_left
-        ;cmpi.w  #3,$18(A2)
-        ;ble.s   loc_right_faster
+        cmpi.w  #3,$18(A2)
+        ble.s   loc_right_slowdown
         addi.l  #$1C000,$40(A2)
         rts
-loc_right_faster:
-        addi.l  #$20000,$40(A2)
+loc_right_slowdown:
+        addi.l  #$C000,$40(A2)
         rts
 
 loc_left:                               ; CODE XREF: ROM:001F6BB4↑j
         btst    #2,D6
         beq.s   locret_1F6BCE
-        ;cmpi.w  #3,$18(A2)
-        ;ble.s   loc_left_faster
+        cmpi.w  #3,$18(A2)
+        ble.s   loc_left_slowdown
         subi.l  #$1C000,$40(A2)
 locret_1F6BCE:                          ; CODE XREF: ROM:001F6BC4↑j
         rts
 
-loc_left_faster:
-        subi.l  #$20000,$40(A2)
+loc_left_slowdown:
+        subi.l  #$C000,$40(A2)
         rts
 
 ; --------------------------------------------------------------
