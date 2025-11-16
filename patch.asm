@@ -66,6 +66,10 @@ ORIGIN_LOC_E9B6                       set $0000E9B6
 ORIGIN_ENMY_KNOCKOUT_LY_ON_FLOOR      set $0000E9C2
 NEW_ENMY_KNOCKOUT_CALC_Y_INERTIA      set $001F66E0
 
+ORIGIN_SOUND_0_POINTER                set $000429CE
+ORIGIN_SOUND_87_POINTER               set $00042B2A
+NEW_SOUND_87_CONTENT                  set $00057A00
+
 ; Overrides: ---------------------------------------------------------------
         org     ORIGIN_Chk_EnemyCollision
 ORIGIN_CHECK_ENEMY_COLLISION:
@@ -397,6 +401,71 @@ loc_24E82:
         movea.w D0,A2
         rts
 
+; --------------------------------------------------------------
+        org     ORIGIN_SOUND_0_POINTER
+byte_429CE:
+
+        org     ORIGIN_SOUND_87_POINTER
+        dc.l    byte_57A00-byte_429CE
+
+        org     NEW_SOUND_87_CONTENT
+;86
+;byte_57A00:	dc.b	 0,  $C2,  $B6,	 $C2,	 0,  $82,    0,	 $B5,	 0,    3,  $2F,	   0,	 0,    0,  $30,	   0,	 0,    0,  $31,	   0,	 0,    0,  $75,	   0,	 0,    0,  $76,	   0,	 0,    0,  $77,	   0; 0
+;		dc.b	 0,    0,  $78,	   0,	 0,    0,  $79,	   0,	 0,    0,  $7A,	   0,	 0,    0,  $7B,	   0,	 0,    0,  $7C,	   0,	 0,    0,  $7D,	   0,	 0,    0,  $FA,	 $26,  $C6,  $F0,    0,	 $F1; 32
+;		dc.b   $13,  $F7,  $64,	 $F3,	 0,    0,  $F1,	 $13,  $F4,    0,    1,	   1,  $9C,  $FF,  $C8,	   2,  $2B,    2,  $10,	   2,	 0,  $FD,  $F0,	   1,  $FA,  $6E,    0,	 $FA,  $7E,    0,  $FA,	 $8E; 64
+;		dc.b	$F,  $F1,   $F,	 $F5,	 9,    0,    1,	 $10,  $FD,  $FB,    1,	 $F6,	 3,    3,    8,	   0,  $F5,    9,    0,	   1,  $10,  $FD,  $FB,	 $FF,  $F6,   $F,   $F,	   8,	 0,    0,    0,	   0; 96
+;		dc.b	 0,    0,    0,	   0,	 0,    0,    2,	 $6C,  $60,  $69,  $61,	 $21,	 7,  $22,    0,	 $DF,  $1F,  $1F,  $DF,	 $84,  $84,  $85,  $81,	   4,	 4,    4,    2,	 $F7,  $17,    7,  $AC,	 $3B; 128
+;		dc.b	$F,   $A,   $D,	   1,	 0,    0,    0,	 $10,  $1F,  $1F,  $1F,	 $1F,  $80,  $80,  $80,	 $92,	 0,    0,    0,	  $F,	 0,    0,    0,	 $A7,  $38,    0; 160
+
+;63
+;byte_57A00:	dc.b	 0,  $C2,  $83,	 $C2,	 0,  $68,    0,	 $82,	 0,    3,  $2F,	   0,	 0,    0,  $30,	   0,	 0,    0,  $31,	   0,	 0,    0,  $5B,	   0,	 0,    0,  $5C,	   0,	 0,    0,  $5D,	   0; 0
+;		dc.b	 0,    0,  $5E,	   0,	 0,    0,  $5F,	   0,	 0,    0,  $60,	   0,	 0,    0,  $61,	   0,	 0,    0,  $62,	   0,	 0,    0,  $63,	   0,	 0,    0,  $F0,	   0,  $F7,  $64,  $F3,	   0; 32
+;		dc.b	 0,  $F1,  $13,	 $F4,	 0,    1,    1,	 $74,  $FF,  $14,    1,	   7,  $FD,    1,  $47,	 $FD,	 1,  $37,  $FD,	   1,  $27,  $FD,  $F5,	   9,	 0,    3,  $17,	 $FD,  $FB,  $FE,  $F6,	   7; 64
+;		dc.b	 7,    8,    0,	   0,	 0,    0,    0,	   0,	 0,    0,    0,	   0,	 1,  $6C,  $60,	 $69,  $61,  $21,    7,	 $22,	 0,  $DF,  $1F,	 $1F,  $DF,  $84,  $84,	 $85,  $81,    4,    4,	   4; 96
+;		dc.b	 2,  $F7,  $17,	   7,  $AC,  $3B; 128
+
+;63 changed
+;byte_57A00:	dc.b	 0,  $C2,  $BF,	 $C2,	 0,  $8B,    0,	 $BE,	 0,    3,  $2F,	   0,	 0,    0,  $30,	   0,	 0,    0,  $31,	   0,	 0,    0,  $5B,	   0,	 0,    0,  $5C,	   0,	 0,    0,  $5D,	   0; 0
+;		dc.b	 0,    0,  $5E,	   0,	 0,    0,  $5F,	   0,	 0,    0,  $60,	   0,	 0,    0,  $61,	   0,	 0,    0,  $62,	   0,	 0,    0,  $63,	   0,	 0,    0,  $FA,	 $26,  $C6,  $F0,    0,  $F7; 32
+;		dc.b   $64,  $F3,    0,    0,  $F1,  $14,  $F4,	   0,	 1,    1,  $74,  $FF,  $14,    1,    7,  $FD,	 1,  $30,  $FD,	   1,  $14,  $FD,    1,  $12,  $FD,  $F5,    9,    0,	 3,  $10,  $FD,  $F0; 64
+;		dc.b	 1,  $FA,  $6E,    0,  $FA,  $7E,    0,  $FA,  $8E,   $F,  $F1,   $F,  $F5,    9,    0,    1,  $10,  $FD,  $FB,    1,  $F6,    3,    3,    8,	 0,  $F5,    9,    0,	 1,  $10,  $FD,  $FB; 96
+;		dc.b   $FF,  $F6,   $F,   $F,	 8,    0,    0,    0,	 0,    0,    0,    0,	 0,    0,    0,    2,  $6C,  $60,  $69,  $61,  $21,    7,  $22,    0,  $DF,  $1F,  $1F,  $DF,  $84,  $84,  $85,  $81; 128
+;		dc.b	 4,    4,    4,    2,  $F7,  $17,    7,  $AC,  $3B,   $F,   $A,   $D,	 1,    0,    0,    0,  $10,  $1F,  $1F,  $1F,  $1F,  $80,  $80,  $80,  $92,    0,    0,    0,   $F,    0,    0,    0; 160
+;		dc.b   $A7,  $38,    0; 192
+
+;38
+;byte_57A00:	dc.b	 0,  $C2,  $9F,	 $C2,	 0,  $84,    0,	 $9E,	 0,    3,  $2F,	   0,	 0,    0,  $30,	   0,	 0,    0,  $31,	   0,	 0,    0,  $77,	   0,	 0,    0,  $78,	   0,	 0,    0,  $79,	   0; 0
+;		dc.b	 0,    0,  $7A,	   0,	 0,    0,  $7B,	   0,	 0,    0,  $7C,	   0,	 0,    0,  $7D,	   0,	 0,    0,  $7E,	   0,	 0,    0,  $7F,	   0,	 0,    0,  $F0,	   0,  $F1,  $13,  $F7,	 $B4; 32
+;		dc.b   $F6,    0,    0,	 $F4,	 0,    1,    1,	 $F6,  $FF,  $FA,  $F1,	 $13,  $F1,  $13,  $F2,	 $70,  $FE,    0,    1,	 $26,  $FD,    1,  $12,	 $FD,	 1,  $14,  $FD,	 $FB,  $FF,    1,  $12,	 $FD; 64
+;		dc.b	 1,    9,  $F1,	 $13,	 1,  $26,  $FD,	 $F5,  $14,    0,    1,	 $12,  $FD,    1,  $14,	 $FD,  $FB,  $FF,    1,	 $12,  $FD,    1,  $11,	 $FD,  $FB,  $FF,  $F6,	   8,	 8,  $13,    0,	   0; 96
+;		dc.b	 0,    0,    0,	   0,	 0,    0,    0,	   0,	 1,  $6A,  $60,	 $69,  $61,  $21,    7,	 $22,	 0,  $DF,  $1F,	 $1F,  $DF,  $80,  $84,	 $85,  $81,    0,    4,	   4,	 2,    7,  $17,	   7; 128
+;		dc.b   $AC,  $3B	; 160
+
+;38 changed
+byte_57A00:	dc.b	 0,  $C2,  $EE,	 $C2,	 0,  $A1,    0,	 $ED,	 0,    3,  $2F,	   0,	 0,    0,  $30,	   0,	 0,    0,  $31,	   0,	 0,    0,  $77,	   0,	 0,    0,  $78,	   0,	 0,    0,  $79,	   0; 0
+		dc.b	 0,    0,  $7A,	   0,	 0,    0,  $7B,	   0,	 0,    0,  $7C,	   0,	 0,    0,  $7D,	   0,	 0,    0,  $7E,	   0,	 0,    0,  $7F,	   0,	 0,    0,  $F0,    0,  $F1,  $13,  $F7,  $B4; 32
+		dc.b   $F6,    0,    0,  $F4,	 0,    1,    1,  $70,  $FF,  $FA,  $F1,  $13,  $F1,  $13,  $F2,  $70,  $FE,    0,    2,  $30,  $FD,    1,  $21,  $FD,	 1,  $14,  $FD,    1,  $33,  $FD,    1,  $14; 64
+		dc.b   $F0,    1,  $F1,  $13,	 1,  $2A,  $FD,  $F5,  $14,    0,    1,  $12,  $FD,    1,  $14,  $FD,  $FB,  $FF,    1,  $12,  $FD,  $F0,    2,  $FA,  $6E,    0,  $FA,  $7E,	 0,  $FA,  $8E,   $F; 96
+		dc.b   $F1,   $C,  $F5,    9,	 0,    1,  $10,  $FD,  $FB,    1,  $F6,    3,	 3,    8,    0,  $F5,	 9,    0,    1,  $10,  $FD,  $FB,  $FF,  $F6,   $F,   $F,    8,    0,	 0,    0,    0,    0; 128
+		dc.b	 0,    0,    0,    0,	 0,    2,  $6A,  $60,  $69,  $61,  $21,    7,  $22,    0,  $DF,  $1F,  $1F,  $DF,  $80,  $80,  $80,  $80,    0,    0,	 0,    0,    0,    0,	 0,    0,  $3B,  $6A; 160
+		dc.b   $60,  $69,  $61,  $21,    7,  $22,    0,  $DF,  $1F,  $1F,  $DF,  $80,  $84,  $85,  $81,    0,    4,    4,    2,    7,  $17,    7,  $AC,  $3B,   $F,   $A,   $D,    1,	 0,    0,    0,  $10; 192
+		dc.b   $1F,  $1F,  $1F,  $1F,  $80,  $80,  $80,  $92,	 0,    0,    0,   $F,	 0,    0,    0,  $A7,  $38,    0; 224
+; F0 is the flag to switch the CH config. and it will set the 0 bit as flag in 1(0xFFA654), when there is F-number and block, the config will be applied.
+; F1 is the volume level for the finaly operator.
+; F2 is TBD. It has 3 values follow up.
+; F3 is to set the next value into 18(0xFFA654). It will decrease the repeat number of the F-number to set the key off
+; F4, the first value is the function pointer. 
+;    * The second value is the delay to adjust the frequency. 
+;    * The third value is the INTERVAL to adjust the frequency by the following two values. The interval will be reset if it reach zero. 
+;    * Following two values are the frequency offset to be applied on the base frequency of the 0-EF value. The acutal offset is accumulated added at $7C(0xFFA654);
+;    * The last value is to define the number of INTERVAL to reverse the frequency adjustment, it make the adjustment as sine frequency up and down.
+;    * All the values has the $7x as the default value and the $8x as the current value
+; F5 is TBD. It skip following 2 values.
+; F7 is to set the frequency offset for each operator based on F-number and block. So it has 4 values follow up
+; FA is to set the register offset and the value to be applied on the register, and $7A(0xFFA654) is to be set as the number of the offset/value pairs to be applied
+; FB is the volume change based on F1
+; 0 - EF: X repeat value, 4 bits block and 4 bits pitch (0x0 - 0xB map to do ra ...). And the value 1/0 on bit 5 of $1/74(0xFFA654) to decide to apply key on, value 1 will skip
+
 ; Change: ---------------------------------------------------------------
         org     NEW_ENMY_KNOCKOUT_CALC_Y_INERTIA
         move.l  $2E(A2),D0
@@ -511,11 +580,12 @@ NEW_SET_Y_AIR_CHECK_GRANDUPPER:
         cmpi.w  #2,$C(A3)
         bne.s   NEW_SET_Y_AIR_NORMAL_RETURN
         ;move.l  #$FFFBD000,$2E(A2)
-        move.l  #$FFFACC00,$2E(A2)
+        ;move.l  #$FFFACC00,$2E(A2)
+        move.l  #$FFFAC400,$2E(A2)
         move.w  #2,$92(A2)
         cmpi.w  #4,$18(A3)
         bgt.s   NEW_SET_Y_AIR_MATCH_GRANDUPPER_RETURN
-        move.l  #$FFFAC400,$2E(A2)
+        ;move.l  #$FFFAC400,$2E(A2)
         move.w  #3,$92(A2)
         ; Set enemy === marking grand upper Y inertia ===
         move.b  #1,$4F(A2)
