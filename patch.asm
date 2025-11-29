@@ -442,14 +442,14 @@ byte_429CE:
 ;		dc.b   $AC,  $3B	; 160
 
 ;38 changed
-byte_57A00:	dc.b	 0,  $C2,  $EE,	 $C2,	 0,  $A1,    0,	 $ED,	 0,    3,  $2F,	   0,	 0,    0,  $30,	   0,	 0,    0,  $31,	   0,	 0,    0,  $77,	   0,	 0,    0,  $78,	   0,	 0,    0,  $79,	   0; 0
+byte_57A00:	dc.b	 0,  $C2,  $E3,	 $C2,	 0,  $96,    0,	 $E2,	 0,    3,  $2F,	   0,	 0,    0,  $30,	   0,	 0,    0,  $31,	   0,	 0,    0,  $77,	   0,	 0,    0,  $78,	   0,	 0,    0,  $79,	   0; 0
 		dc.b	 0,    0,  $7A,	   0,	 0,    0,  $7B,	   0,	 0,    0,  $7C,	   0,	 0,    0,  $7D,	   0,	 0,    0,  $7E,	   0,	 0,    0,  $7F,	   0,	 0,    0,  $F0,    0,  $F1,  $13,  $F7,  $B4; 32
-		dc.b   $F6,    0,    0,  $F4,	 0,    1,    1,  $70,  $FF,  $FA,  $F1,  $13,  $F1,  $13,  $F2,  $70,  $FE,    0,    2,  $30,  $FD,    1,  $21,  $FD,	 1,  $14,  $FD,    1,  $33,  $FD,    1,  $14; 64
-		dc.b   $F0,    1,  $F1,  $13,	 1,  $2A,  $FD,  $F5,  $14,    0,    1,  $12,  $FD,    1,  $14,  $FD,  $FB,  $FF,    1,  $12,  $FD,  $F0,    2,  $FA,  $6E,    0,  $FA,  $7E,	 0,  $FA,  $8E,   $F; 96
-		dc.b   $F1,   $C,  $F5,    9,	 0,    1,  $10,  $FD,  $FB,    1,  $F6,    3,	 3,    8,    0,  $F5,	 9,    0,    1,  $10,  $FD,  $FB,  $FF,  $F6,   $F,   $F,    8,    0,	 0,    0,    0,    0; 128
-		dc.b	 0,    0,    0,    0,	 0,    2,  $6A,  $60,  $69,  $61,  $21,    7,  $22,    0,  $DF,  $1F,  $1F,  $DF,  $80,  $80,  $80,  $80,    0,    0,	 0,    0,    0,    0,	 0,    0,  $3B,  $6A; 160
-		dc.b   $60,  $69,  $61,  $21,    7,  $22,    0,  $DF,  $1F,  $1F,  $DF,  $80,  $84,  $85,  $81,    0,    4,    4,    2,    7,  $17,    7,  $AC,  $3B,   $F,   $A,   $D,    1,	 0,    0,    0,  $10; 192
-		dc.b   $1F,  $1F,  $1F,  $1F,  $80,  $80,  $80,  $92,	 0,    0,    0,   $F,	 0,    0,    0,  $A7,  $38,    0; 224
+		dc.b   $F6,    0,    0,  $F4,	 0,    1,    1,  $70,  $FF,  $FA,  $F1,  $13,  $F2,  $70,  $FE,    0,	 1,  $35,  $FD,    2,  $22,  $FD,  $F0,    1,  $F1,  $13,    2,   $4,  $FD,  $F1,  $11,    1; 64
+		dc.b   $34,    1,   $22,   1,  $24,    1,    2,   1,     4,  $FD,  $F0,    2,  $FA,  $6E,    0,  $FA,  $7E,    0,  $FA,  $8E,   $F,  $F1,   $D,  $F5,	 9,    0,    1,  $10,  $FD,  $FB,    1,  $F6; 96
+		dc.b	 3,    3,    8,    0,  $F5,    9,    0,    1,  $10,  $FD,  $FB,  $FF,  $F6,   $F,   $F,    8,	 0,    0,    0,    0,	 0,    0,    0,    0,	 0,    0,    2,  $6A,  $60,  $69,  $61,  $21; 128
+		dc.b	 7,  $22,    0,  $DF,  $1F,  $1F,  $DF,  $80,  $80,  $80,  $80,    0,	 0,    0,    0,    0,	 0,    0,    0,  $3B,  $6A,  $60,  $69,  $61,  $21,    7,  $22,    0,  $DF,  $1F,  $1F,  $DF; 160
+		dc.b   $80,  $84,  $85,  $81,	 0,    4,    4,    2,	 7,  $17,    7,  $AC,  $3B,   $F,   $A,   $D,	 1,    0,    0,    0,  $10,  $1F,  $1F,  $1F,  $1F,  $80,  $80,  $80,  $92,    0,    0,    0; 192
+		dc.b    $F,    0,    0,    0,  $A7,  $38,    0; 224
 ; F0 is the flag to switch the CH config. and it will set the 0 bit as flag in 1(0xFFA654), when there is F-number and block, the config will be applied.
 ; F1 is the volume level for the finaly operator.
 ; F2 is TBD. It has 3 values follow up.
@@ -460,11 +460,12 @@ byte_57A00:	dc.b	 0,  $C2,  $EE,	 $C2,	 0,  $A1,    0,	 $ED,	 0,    3,  $2F,	   
 ;    * Following two values are the frequency offset to be applied on the base frequency of the 0-EF value. The acutal offset is accumulated added at $7C(0xFFA654);
 ;    * The last value is to define the number of INTERVAL to reverse the frequency adjustment, it make the adjustment as sine frequency up and down.
 ;    * All the values has the $7x as the default value and the $8x as the current value
-; F5 is TBD. It skip following 2 values.
+; F5 is to repeat from the +2 location until F6. It skip following 2 values.
+; F6 is to repeat back to F5 + 2 location, repeat end with execution at F6 +5
 ; F7 is to set the frequency offset for each operator based on F-number and block. So it has 4 values follow up
 ; FA is to set the register offset and the value to be applied on the register, and $7A(0xFFA654) is to be set as the number of the offset/value pairs to be applied
 ; FB is the volume change based on F1
-; 0 - EF: X repeat value, 4 bits block and 4 bits pitch (0x0 - 0xB map to do ra ...). And the value 1/0 on bit 5 of $1/74(0xFFA654) to decide to apply key on, value 1 will skip
+; 0 - EF: X repeat value, 4 bits block and 4 bits pitch (0x0 - 0xB map to do ra ...). And the value 1/0 on bit 5 of $1/$74(0xFFA654) to decide to apply key on, value 1 will skip
 
 ; Change: ---------------------------------------------------------------
         org     NEW_ENMY_KNOCKOUT_CALC_Y_INERTIA
